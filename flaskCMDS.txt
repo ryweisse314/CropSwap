@@ -1,0 +1,6 @@
+python -m venv venv  
+venv\\Scripts\\activate
+pip install flask flask-wtf flask-sqlalchemy flask-login flask-migrate
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+$env:FLASK_APP = "run.py"
+flask db init

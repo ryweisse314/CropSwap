@@ -1,0 +1,38 @@
+<!-- app/templates/dashboard.html -->
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Your Dashboard</h2>
+
+    <section>
+        <h3>Your Listings</h3>
+
+        <div class="listing-section">
+            <h4>What You Have:</h4>
+            {% if have_listings %}
+                <ul>
+                    {% for listing in have_listings %}
+                        <li>{{ listing.produce.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No 'have' listings yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="listing-section">
+            <h4>What You Want:</h4>
+            {% if want_listings %}
+                <ul>
+                    {% for listing in want_listings %}
+                        <li>{{ listing.produce.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No 'want' listings yet.</p>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('add_listing') }}" class="button">Add a New Listing</a>
+    </section>
+{% endblock %}

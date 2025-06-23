@@ -1,0 +1,16 @@
+<!-- app/templates/index.html -->
+{% extends "layout.html" %}
+
+{% block content %}
+    <section class="hero">
+        <h2>Welcome to CropSwap</h2>
+        <p>Connect with farmers in your area to swap your fresh produce. No money, just trade.</p>
+
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('register') }}" class="button">Join Now</a>
+            <a href="{{ url_for('login') }}" class="button secondary">Log In</a>
+        {% else %}
+            <a href="{{ url_for('dashboard') }}" class="button">Go to Dashboard</a>
+        {% endif %}
+    </section>
+{% endblock %}
