@@ -7,17 +7,13 @@ from app.forms import RegistrationForm, LoginForm, ListingForm
 from app.models import User, Produce, Listing
 from flask import Blueprint
 
-from app import create_app
+bp = Blueprint('main', __name__)
 
-from app import db
-from flask import current_app as app
-
-@app.route('/')
+@bp.route('/')
 def index():
     return render_template('index.html')
 
-
-@app.route('/register', methods=['GET', 'POST'])
+@bp.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -26,38 +22,34 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Account created! You can now log in.', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
 
-
-@app.route('/login', methods=['GET', 'POST'])
+@bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('main.dashboard'))
         flash('Invalid email or password.', 'danger')
     return render_template('login.html', form=form)
 
-
-@app.route('/logout')
+@bp.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
-
-@app.route('/dashboard')
+@bp.route('/dashboard')
 @login_required
 def dashboard():
     have_listings = Listing.query.filter_by(user_id=current_user.id, type='have').all()
     want_listings = Listing.query.filter_by(user_id=current_user.id, type='want').all()
     return render_template('dashboard.html', have_listings=have_listings, want_listings=want_listings)
 
-
-@app.route('/add_listing', methods=['GET', 'POST'])
+@bp.route('/add_listing', methods=['GET', 'POST'])
 @login_required
 def add_listing():
     form = ListingForm()
@@ -67,11 +59,10 @@ def add_listing():
         db.session.add(listing)
         db.session.commit()
         flash('Listing added!', 'success')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('main.dashboard'))
     return render_template('add_listing.html', form=form)
 
-
-@app.route('/matches')
+@bp.route('/matches')
 @login_required
 def matches():
     matches = []
